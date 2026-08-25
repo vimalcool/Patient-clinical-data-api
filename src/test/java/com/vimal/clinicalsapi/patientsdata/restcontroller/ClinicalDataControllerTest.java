@@ -5,18 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import com.vimal.clinicalsapi.patientsdata.dto.ClinicalDataRequest;
 import com.vimal.clinicalsapi.patientsdata.model.ClinicalData;
 import com.vimal.clinicalsapi.patientsdata.model.Patient;
@@ -47,10 +42,9 @@ class ClinicalDataControllerTest {
                 request.setComponentName("bp");
                 request.setComponentValue("67/119");
 
-                ResponseEntity<?> response = clinicalDataController.saveClinicalData(request);
+                ClinicalData response = clinicalDataController.saveClinicalData(request);
 
-                assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-                assertEquals("patientId is required", response.getBody());
+                assertEquals("patientId is required", response.getComponentName());
 
                 verifyNoInteractions(patientRepository, clinicalDataRepository);
         }
@@ -62,9 +56,9 @@ class ClinicalDataControllerTest {
                 when(patientRepository.findById(99L))
                                 .thenReturn(Optional.empty());
 
-                ResponseEntity<?> response = clinicalDataController.saveClinicalData(request);
+                ClinicalData response = clinicalDataController.saveClinicalData(request);
 
-                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+                assertEquals("patientId is required", response.getComponentName());
                 verify(patientRepository).findById(99L);
                 verifyNoInteractions(clinicalDataRepository);
         }
@@ -80,10 +74,9 @@ class ClinicalDataControllerTest {
                 when(clinicalDataRepository.save(any(ClinicalData.class)))
                                 .thenReturn(savedClinicalData);
 
-                ResponseEntity<?> response = clinicalDataController.saveClinicalData(request);
+                ClinicalData response = clinicalDataController.saveClinicalData(request);
 
-                assertEquals(HttpStatus.OK, response.getStatusCode());
-                assertSame(savedClinicalData, response.getBody());
+                assertSame(savedClinicalData, response);
 
                 ArgumentCaptor<ClinicalData> captor = ArgumentCaptor.forClass(ClinicalData.class);
 
@@ -102,14 +95,16 @@ class ClinicalDataControllerTest {
         void saveClinicalData_shouldPassTheCorrectPatientIdToRepository() {
                 ClinicalDataRequest request = createRequest(5L);
                 Patient patient = new Patient("Jane", "Smith", 28);
+                ClinicalData savedClinicalData = new ClinicalData();
 
                 when(patientRepository.findById(5L))
                                 .thenReturn(Optional.of(patient));
                 when(clinicalDataRepository.save(any(ClinicalData.class)))
-                                .thenAnswer(invocation -> invocation.getArgument(0));
+                                .thenReturn(savedClinicalData);
 
-                clinicalDataController.saveClinicalData(request);
+                ClinicalData response = clinicalDataController.saveClinicalData(request);
 
+                assertSame(savedClinicalData, response);
                 verify(patientRepository, times(1)).findById(5L);
         }
 
