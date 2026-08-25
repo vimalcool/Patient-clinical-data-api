@@ -1,2 +1,161 @@
-# Patient-clinical-data-api
-A Spring Boot REST API for managing patient records and clinical data. The application provides CRUD operations for patients and clinical measurements, uses Spring Data JPA for database persistence, and connects to MySQL.
+# Patient Clinical Data API
+
+A Spring Boot REST API for managing patients and their clinical data using Spring Data JPA and MySQL.
+
+## Technology
+
+- Java 17
+- Spring Boot 4.2.0-SNAPSHOT
+- Spring Web MVC
+- Spring Data JPA
+- MySQL
+- Maven
+
+## Prerequisites
+
+- JDK 17 or later
+- MySQL 8 or later
+- Git
+
+## Database Setup
+
+Create the database:
+
+```sql
+CREATE DATABASE clinicals;
+```
+
+Configure the connection in `src/main/resources/application.properties`:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/clinicals?useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=root
+```
+
+Make sure the database tables match the entity mappings. The `patient` table uses `first_name`, `last_name`, and `age`. The `clinicaldata` table uses `component_name`, `component_value`, `measured_date_time`, and `patient_id`.
+
+## Run Locally
+
+Clone the repository and enter its directory:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/patient-clinical-data-api.git
+cd patient-clinical-data-api
+```
+
+Run the application with Maven:
+
+Windows:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+Linux or macOS:
+
+```bash
+./mvnw spring-boot:run
+```
+
+The API is available at:
+
+```text
+http://localhost:8080/patient-services
+```
+
+## REST Endpoints
+
+### Patients
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `POST` | `/patients` | Create a patient |
+| `GET` | `/patients` | Get all patients |
+| `GET` | `/patients/{id}` | Get a patient by ID |
+| `PUT` | `/patients/{id}` | Update a patient |
+| `DELETE` | `/patients/{id}` | Delete a patient |
+
+Example patient request:
+
+```json
+{
+  "firstname": "John",
+  "lastname": "Doe",
+  "age": 35
+}
+```
+
+Full URL example:
+
+```text
+POST http://localhost:8080/patient-services/patients
+```
+
+### Clinical Data
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `POST` | `/clinicaldata` | Create clinical data directly |
+| `GET` | `/clinicaldata` | Get all clinical data |
+| `GET` | `/clinicaldata/{id}` | Get clinical data by ID |
+| `PUT` | `/clinicaldata/{id}` | Update clinical data |
+| `DELETE` | `/clinicaldata/{id}` | Delete clinical data |
+| `POST` | `/clinicaldata/clinicals` | Create clinical data for an existing patient |
+
+Use `/clinicaldata/clinicals` when associating a record with a patient:
+
+```json
+{
+  "componentName": "bp",
+  "componentValue": "67/119",
+  "patientId": 1
+}
+```
+
+The `patientId` is required and must identify an existing patient.
+
+## Logging
+
+Logs are written to the console and to:
+
+```text
+logs/patient-clinical-data-api.log
+```
+
+Logging is configured in `src/main/resources/application.properties`. The application package uses `DEBUG` logging, while the root logger uses `INFO`.
+
+## Run Tests
+
+Windows:
+
+```powershell
+.\mvnw.cmd test
+```
+
+Linux or macOS:
+
+```bash
+./mvnw test
+```
+
+## Create a GitHub Repository
+
+1. On GitHub, select **New repository**.
+2. Enter `patient-clinical-data-api` as the repository name.
+3. Do not add an additional README if this project already contains one.
+4. Create the repository and copy its HTTPS URL.
+5. From the project directory, run:
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/patient-clinical-data-api.git
+git push -u origin main
+```
+
+Replace `YOUR_USERNAME` with your GitHub username.
+
+Never commit database passwords, API keys, or other secrets. Use environment variables or a local configuration file for sensitive values.
