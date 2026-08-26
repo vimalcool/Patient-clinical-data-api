@@ -226,3 +226,9 @@ git push -u origin main
 Replace `YOUR_USERNAME` with your GitHub username.
 
 Never commit database passwords, API keys, or other secrets. Use environment variables or a local configuration file for sensitive values.
+
+## Contact / Comments
+
+If you have questions, feedback, or suggestions for this project, please leave a comment on the GitHub repository discussion or issue tracker.
+
+You can also contact the maintainer through the project’s GitHub profile or by opening an issue with a clear description of the problem or improvement.
