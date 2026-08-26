@@ -11,7 +11,7 @@ import com.vimal.clinicalsapi.patientsdata.model.Patient;
 import com.vimal.clinicalsapi.patientsdata.repos.PatientRepository;
 
 @RestController
-@RequestMapping("/patients")
+@RequestMapping("/api/patients")
 public class PatientController {
 
     private static final Logger logger = LoggerFactory.getLogger(PatientController.class);
