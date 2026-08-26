@@ -44,17 +44,21 @@ git clone https://github.com/YOUR_USERNAME/patient-clinical-data-api.git
 cd patient-clinical-data-api
 ```
 
+### Backend (Spring Boot API)
+
 Run the application with Maven:
 
 Windows:
 
 ```powershell
+cd backend
 .\mvnw.cmd spring-boot:run
 ```
 
 Linux or macOS:
 
 ```bash
+cd backend
 ./mvnw spring-boot:run
 ```
 
@@ -62,6 +66,69 @@ The API is available at:
 
 ```text
 http://localhost:8080/patient-services
+```
+
+### Frontend (React + React Router)
+
+The frontend is located in the `frontend` folder and communicates with the backend through the proxy configured in `frontend/package.json`.
+
+Install dependencies:
+
+```bash
+cd frontend
+npm install
+```
+
+Start the frontend development server:
+
+```bash
+npm start
+```
+
+The React app runs at:
+
+```text
+http://localhost:3000
+```
+
+If you want to change the API URL, set the environment variable before starting the app:
+
+```bash
+REACT_APP_PATIENTS_API_URL=http://localhost:8080/patient-services npm start
+```
+
+The app includes pages to:
+
+- view all patients
+- add a new patient
+- add clinical data for a selected patient
+
+## Frontend Components Required
+
+The frontend is built with React and includes the following key UI components:
+
+- `Home` component: displays the patient list and a link to add patient records
+- `AddPatient` component: form to capture patient details such as first name, last name, and age
+- `AddClinical` component: form to add a clinical reading for a selected patient
+- `App` component: sets up routing and wraps the app with toast notifications
+- `api.js`: Axios client used to call the backend REST endpoints
+
+These components are located under `frontend/src/components/` and are required to support the patient management flow.
+
+## Project Structure
+
+```text
+patient-clinical-data-api/
+├── backend/                 # Spring Boot REST API
+│   ├── src/main/java/       # Java source code
+│   ├── src/main/resources/  # Config and properties
+│   └── pom.xml              # Maven project file
+├── frontend/                # React frontend
+│   ├── src/                 # UI components and API client
+│   ├── public/              # Static assets
+│   └── package.json         # React app dependencies and scripts
+├── README.md
+└── .gitignore
 ```
 
 ## REST Endpoints
